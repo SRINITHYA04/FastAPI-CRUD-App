@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, HTTPException
 from pydantic import BaseModel
 from typing import List #It helps you describe data types more clearly 
 
@@ -85,3 +85,14 @@ async def create_a_book(Book_data : Book): # Book_data is of obj type
     return new_book
 
 # the newly add book can de veiwed but again giving get/books.
+
+# 3. Retrive a Book from the in memory DB
+@app.get('/books/{book_id}')
+async def get_book(book_id: int):
+    for book in books:
+        if book["id"] == book_id:
+             return book
+    raise HTTPException(status_code =404, detail="Book not found")
+    
+
+
