@@ -1,3 +1,9 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List #It helps you describe data types more clearly 
+
+app = FastAPI(title="Crud FastApi_Crud_Application")
+
 books = [
     {
         "id": 1,
@@ -72,3 +78,19 @@ books = [
         "language": "English"
     }
 ]
+
+
+class Book(BaseModel):
+    id: int
+    title: str
+    author: str
+    publisher: str
+    published_date: str
+    page_count: int
+    language: str
+
+
+# 1. get the list of all books
+@app.get("/books", response_model = List[Book])
+def get_all_books()-> List[Book]:
+    return books
