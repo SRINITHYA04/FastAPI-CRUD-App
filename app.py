@@ -104,7 +104,7 @@ async def get_book(book_id: int)-> dict :
     for book in books:
         if book["id"] == book_id:
              return book
-    raise HTTPException(status_code =404, detail="Book not found")
+    raise HTTPException(status_code = 404, detail="Book not found")
 
 
 #  4. Update a Book in the in-memory DB
@@ -117,7 +117,14 @@ async def Update_book(book_id: int, book_update_data: Book_Flexible):
     raise HTTPException(status_code =404, detail="Book not found") 
 
 
-#5. 
+#5.  Delete a book from the in-memery DB
+@app.delete('/books/{book_id}')
+async def delect_book(book_id: int)-> dict :
+    for book in books:
+        if book["id"] == book_id:
+             books.remove(book)
+             return book
+    raise HTTPException(status_code =404, detail="Book not found") 
 
 
 
