@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from pydantic import BaseModel
 from typing import List #It helps you describe data types more clearly 
 
@@ -58,24 +58,6 @@ books = [
         "published_date": "1997-01-01",
         "page_count": 236,
         "language": "English"
-    },
-    {
-        "id": 7,
-        "title": "Think and Grow Rich",
-        "author": "Napoleon Hill",
-        "publisher": "The Ralston Society",
-        "published_date": "1937-01-01",
-        "page_count": 238,
-        "language": "English"
-    },
-    {
-        "id": 8,
-        "title": "Zero to One",
-        "author": "Peter Thiel",
-        "publisher": "Crown Business",
-        "published_date": "2014-09-16",
-        "page_count": 224,
-        "language": "English"
     }
 ]
 
@@ -91,6 +73,15 @@ class Book(BaseModel):
 
 
 # 1. get the list of all books
-@app.get("/books", response_model = List[Book])
+@app.get("/books", response_model = List[Book]) #decorator
 def get_all_books()-> List[Book]:
     return books
+
+#2. Add a new to the In memory db
+@app.post("/books", status_code = status.HTTP_201_CREATED)
+async def create_a_book(Book_data : Book): # Book_data is of obj type
+    new_book = Book_data.model_dump() # dump_modle() converts obj to dict. so new_bbok is of dict type
+    books.append(new_book) # append makes no error
+    return new_book
+
+# the newly add book can de veiwed but again giving get/books.
